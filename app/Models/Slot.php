@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
 
 class Slot extends Model
 {
     protected $fillable = [
+        'parking_slot_owner_id',
         'identifier',
         'name',
         'location',
@@ -20,6 +22,22 @@ class Slot extends Model
         'metadata' => 'array',
         'location' => 'array',
     ];
+
+    /**
+     * Get the owner of this parking slot.
+     */
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(ParkingSlotOwner::class, 'parking_slot_owner_id');
+    }
+
+    /**
+     * Get the rate cards for this slot.
+     */
+    public function rateCards(): HasMany
+    {
+        return $this->hasMany(RateCard::class);
+    }
 
     /**
      * Calculate distance between two points using Haversine formula

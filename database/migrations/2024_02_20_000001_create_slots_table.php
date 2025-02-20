@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('slots', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('parking_slot_owner_id')->constrained();
             $table->string('identifier')->unique();
             $table->string('name');
             $table->json('location')->nullable(); // {latitude: number, longitude: number}
