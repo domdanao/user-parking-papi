@@ -16,3 +16,4 @@ Route::view('/scan', 'scan');
 Route::view('/generate', 'generate');	
 
 require __DIR__.'/auth.php';
+require __DIR__.'/parking-slot-owner.php';

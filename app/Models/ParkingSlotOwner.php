@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class ParkingSlotOwner extends Model
+class ParkingSlotOwner extends Authenticatable
 {
     /**
      * The attributes that are mass assignable.
@@ -23,6 +23,10 @@ class ParkingSlotOwner extends Model
         'status',
     ];
 
+    protected $hidden = [
+        'password',
+    ];
+
     /**
      * The attributes that should be cast.
      *
@@ -38,7 +42,7 @@ class ParkingSlotOwner extends Model
      */
     public function slots(): HasMany
     {
-        return $this->hasMany(Slot::class);
+        return $this->hasMany(Slot::class, 'parking_slot_owner_id');
     }
 
     /**
