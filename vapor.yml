@@ -1,4 +1,4 @@
-id: 69754
+id: 69795
 name: user-parking-papi
 environments:
   production:
@@ -13,7 +13,7 @@ environments:
     memory: 1024
     cli-memory: 512
     runtime: "php-8.4:al2"
-    database: dev-db-pgsql
+    database: "dev-db-pgsql"
     domain: dev.parking.net.ph
     build:
       - "COMPOSER_MIRROR_PATH_REPOS=1 composer install"
