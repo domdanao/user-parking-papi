@@ -12,14 +12,14 @@
 		<div class="mt-4">
 			<iframe
 				width="100%"
-				height="200"
+				height="250"
 				style="border:0"
 				loading="lazy"
 				allowfullscreen
 				referrerpolicy="no-referrer-when-downgrade"
 				src="https://www.google.com/maps/embed/v1/search?key={{ env('GOOGLE_MAPS_API_KEY') }}
 					&q={{ $location['latitude'] }}+{{ $location['longitude'] }}
-					&zoom=18
+					&zoom=19
 					&maptype=roadmap
 					&language=en
 					&region=PH">
@@ -30,32 +30,24 @@
 			<div class="overflow-x-auto">
 				<table class="min-w-full text-lg divide-y divide-gray-600">
 					<tbody class="divide-y divide-gray-600">
-						{{-- <tr>
-							<td class="whitespace-nowrap py-1 font-medium text-gray-900">
-							</td>
-						</tr> --}}
 						<tr>
-							<td class="whitespace-nowrap py-2 font-medium text-gray-900">
-								Slot name
+							<td class="whitespace-nowrap py-2 font-medium text-gray-900 uppercase text-sm">
+								Owner
 							</td>
-							<td class="whitespace-nowrap py-2 text-gray-700">{{ $slot->name }}</td>
+							<td class="whitespace-nowrap py-2 text-gray-700">{{ $owner->name }}</td>
 						</tr>
 						<tr>
-							<td class="whitespace-nowrap py-2 font-medium text-gray-900">
-								Slot ID
+							<td class="whitespace-nowrap py-2 font-medium text-gray-900 uppercase text-sm">
+								Slot
 							</td>
 							<td class="whitespace-nowrap py-2 text-gray-700">{{ $slot->identifier }}</td>
 						</tr>
 						<tr>
-							<td class="whitespace-nowrap py-3 font-medium text-gray-900">
-								Your plate no.
+							<td class="whitespace-nowrap py-3 font-medium text-gray-900 uppercase text-sm">
+								Your plate #
 							</td>
 							<td class="whitespace-nowrap text-gray-700 py-3">
 								<input autofocus type="text" wire:model="plate_no" class="border border-gray-300 rounded-md px-1 py-1 shadow placeholder:text-gray-400" placeholder="ABC 1234">
-							</td>
-						</tr>
-						<tr>
-							<td class="whitespace-nowrap py-1 font-medium text-gray-900">
 							</td>
 						</tr>
 					</tbody>
