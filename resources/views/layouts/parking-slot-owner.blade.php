@@ -34,8 +34,11 @@
                                 <x-nav-link :href="route('parking-slot-owner.dashboard')" :active="request()->routeIs('parking-slot-owner.dashboard')">
                                     {{ __('Dashboard') }}
                                 </x-nav-link>
-                                <x-nav-link :href="route('parking-slot-owner.slots.index')" :active="request()->routeIs('parking-slot-owner.slots.*')">
+                                <x-nav-link :href="route('parking-slot-owner.slots.index')" :active="request()->routeIs('parking-slot-owner.slots.index')">
                                     {{ __('My Slots') }}
+                                </x-nav-link>
+                                <x-nav-link :href="route('parking-slot-owner.slots.create')" :active="request()->routeIs('parking-slot-owner.slots.create')">
+                                    {{ __('Create Slot') }}
                                 </x-nav-link>
                             </div>
                         </div>

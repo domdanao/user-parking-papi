@@ -10,16 +10,18 @@ class TakeSlot extends Component
 {
     public Slot $slot;
 
-    public function mount(Slot $slot)
+    public function mount($identifier)
     {
-        $this->slot = $slot;
+        $this->slot = Slot::where('identifier', $identifier)->firstOrFail();
     }
 
     #[Layout('layouts.minimal')]
     public function render()
     {
+		$location = json_decode($this->slot->location, true);
         return view('livewire.take-slot', [
-            'slot' => $this->slot
+            'slot' => $this->slot,
+			'location' => $location
         ]);
     }
 }
