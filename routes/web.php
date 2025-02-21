@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Livewire\TakeSlot;
 
 Route::view('/', 'welcome');
 
@@ -13,7 +14,9 @@ Route::view('profile', 'profile')
     ->name('profile');
 
 Route::view('/scan', 'scan');
-Route::view('/generate', 'generate');	
+Route::view('/generate', 'generate');
+
+Route::get('/slot/{slot}', TakeSlot::class)->name('take-slot');
 
 require __DIR__.'/auth.php';
 require __DIR__.'/parking-slot-owner.php';
