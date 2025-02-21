@@ -6,34 +6,36 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
+#[Layout('layouts.guest')]
 class Login extends Component
 {
+
     public string $email = '';
     public string $password = '';
-    public bool $remember = false;
+
+    public function rules()
+    {
+        return [
+            'email' => ['required', 'string', 'email'],
+            'password' => ['required', 'string'],
+        ];
+    }
 
     public function login()
     {
-        $this->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        $credentials = $this->validate();
 
-        if (Auth::guard('parking-slot-owner')->attempt([
-            'email' => $this->email,
-            'password' => $this->password,
-        ], $this->remember)) {
+        if (Auth::guard('parking-slot-owner')->attempt($credentials)) {
             session()->regenerate();
 
             return redirect()->intended(route('parking-slot-owner.dashboard'));
         }
 
-        $this->addError('email', trans('auth.failed'));
+        $this->addError('email', 'The provided credentials do not match our records.');
     }
 
-    #[Layout('layouts.guest')]
     public function render()
     {
-        return view('pages.parking-slot-owner.auth.login');
+        return view('livewire.pages.parking-slot-owner.auth.login');
     }
 }

@@ -34,6 +34,9 @@
                                 <x-nav-link :href="route('parking-slot-owner.dashboard')" :active="request()->routeIs('parking-slot-owner.dashboard')">
                                     {{ __('Dashboard') }}
                                 </x-nav-link>
+                                <x-nav-link :href="route('parking-slot-owner.slots.index')" :active="request()->routeIs('parking-slot-owner.slots.*')">
+                                    {{ __('My Slots') }}
+                                </x-nav-link>
                             </div>
                         </div>
 
