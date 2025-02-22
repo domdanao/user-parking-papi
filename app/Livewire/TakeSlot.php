@@ -6,24 +6,39 @@ use App\Models\Slot;
 use App\Models\ParkingSlotOwner;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Computed;
 
 class TakeSlot extends Component
 {
     public Slot $slot;
     public $duration = 6000; // Default to 2 hours (₱60.00)
-	public $plate_no = '';
+    public $plate_no = '';
 
     public function mount($identifier)
     {
         $this->slot = Slot::with('owner')->where('identifier', $identifier)->firstOrFail();
-        $this->duration = 6000; // Ensure duration is set in mount
     }
 
-	// On update of duration, update the slot's duration
-	public function updatedDuration($value)
-	{
-		$this->duration = $value;
-	}
+    public function updatedDuration($value)
+    {
+        $this->duration = (int) $value;
+    }
+
+    public function isPlateNumberValid()
+    {
+        return strlen(trim($this->plate_no)) >= 7;
+    }
+
+    public function pay()
+    {
+        // Validate required fields
+        $this->validate([
+            'plate_no' => 'required|min:4',
+        ]);
+
+        // TODO: Implement payment processing
+        // For now, we'll just validate the fields
+    }
 
     #[Layout('layouts.minimal')]
     public function render()
