@@ -19,7 +19,12 @@ class TakeSlot extends Component
     #[Layout('layouts.minimal')]
     public function render()
     {
-        $location = json_decode($this->slot->location, true);
+        if(gettype($this->slot->location) === 'string') {
+            $location = json_decode($this->slot->location, true);
+        } else {
+            $location = $this->slot->location;
+        }
+
         $owner = $this->slot->owner;
         
         return view('livewire.take-slot', [

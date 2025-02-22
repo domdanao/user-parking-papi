@@ -53,7 +53,7 @@
 					</tbody>
 				</table>
 			</div>
-			<button type="button" class="w-full rounded-lg bg-blue-600 text-white mt-2 text-center py-1 cursor-pointer">P A Y</button>
+			<button type="button" class="w-full rounded-lg bg-blue-600 text-white mt-2 text-center py-2 text-sm">P A Y</button>
 			<div>
 				<div class="text-xs text-gray-700 font-normal mt-1">By clicking pay, you agree to our <a href="#" class="text-blue-600">terms and conditions</a></div>
 			</div>
