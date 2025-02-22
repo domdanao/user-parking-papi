@@ -18,7 +18,5 @@ Route::view('/generate', 'generate');
 
 Route::get('/slot/{identifier}', TakeSlot::class)->name('take-slot');
 
-Route::view('/gmap', 'gmap');
-
 require __DIR__.'/auth.php';
 require __DIR__.'/parking-slot-owner.php';

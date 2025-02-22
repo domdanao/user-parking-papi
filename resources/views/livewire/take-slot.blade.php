@@ -25,49 +25,49 @@
 					&region=PH">
 			</iframe>
 		</div>
-		<div class="text-2xl font-bold mt-4">
-			<!-- Table, with horizontal lines per row, -->
-			<div class="overflow-x-auto">
-				<table class="min-w-full text-lg divide-y divide-gray-600">
-					<tbody class="divide-y divide-gray-600">
-						<tr>
-							<td class="whitespace-nowrap py-2 font-medium text-gray-900 uppercase text-sm">
-								Owner
-							</td>
-							<td class="whitespace-nowrap py-2 text-gray-700">{{ $owner->name }}</td>
-						</tr>
-						<tr>
-							<td class="whitespace-nowrap py-2 font-medium text-gray-900 uppercase text-sm">
-								Slot
-							</td>
-							<td class="whitespace-nowrap py-2 text-gray-700">{{ $slot->identifier }}</td>
-						</tr>
-						<tr>
-							<td class="whitespace-nowrap py-3 font-medium text-gray-900 uppercase text-sm">
-								Your plate #
-							</td>
-							<td class="whitespace-nowrap text-gray-700 py-3">
-								<input autofocus type="text" wire:model="plate_no" class="border border-gray-300 rounded-md px-1 py-1 shadow placeholder:text-gray-400" placeholder="ABC 1234">
-							</td>
-						</tr>
-					</tbody>
-				</table>
+		<div class="text-xl mt-4 flex flex-col gap-1 divide-y divide-gray-700 divide-dashed">
+			<div class="flex items-center gap-1 py-2">
+				<div class="whitespace-nowrap font-medium text-gray-900 uppercase text-sm w-1/3">Slot</div>
+				<div class="whitespace-nowrap text-gray-700 w-2/3 font-bold">{{ $slot->identifier }}</div>
 			</div>
-			<button type="button" class="w-full rounded-lg bg-blue-600 text-white mt-2 text-center py-2 text-sm">P A Y</button>
-			<div>
-				<div class="text-xs text-gray-700 font-normal mt-1">By clicking pay, you agree to our <a href="#" class="text-blue-600">terms and conditions</a></div>
+
+			<div class="flex flex-col gap-1 py-3">
+				<div class="flex items-center gap-1 py-1">
+					<div class="whitespace-nowrap font-medium text-gray-900 uppercase text-sm w-1/3">Your plate #</div>
+					<div class="whitespace-nowrap text-gray-700 w-2/3">
+						<input autofocus type="text" wire:model="plate_no" class="border border-gray-300 rounded-md px-3 w-full py-1 shadow placeholder:text-gray-400 font-bold" placeholder="ABC 1234">
+					</div>
+				</div>
+				<div class="flex items-center gap-1">
+					<div class="whitespace-nowrap font-medium text-gray-900 uppercase text-sm w-1/3"></div>
+					<div class="text-gray-700 w-2/3">
+						<p class="text-xs text-gray-500 font-semibold">No plate number? Use your conduction sticker number instead.</p>
+					</div>
+				</div>
 			</div>
-			<hr class="my-4">
-			<div>
-				<div class="text-xl font-bold">Rates</div>
-				<div class="text-sm text-gray-700 font-semibold mt-1">- First 2 hours: <b>P60.00</b></div>
-				<div class="text-sm text-gray-700 font-semibold mt-1">- 3rd hour: <b>+P40.00</b></div>
-				<div class="text-sm text-gray-700 font-semibold mt-1">- 4th hour: <b>+P50.00</b></div>
-				<div class="text-sm text-gray-700 font-semibold mt-1">- 5th hour: <b>+P60.00</b></div>
-				<div class="text-sm text-gray-700 font-semibold mt-1">- 6th hour: <b>+P70.00</b></div>
-				<div class="text-sm text-gray-700 font-semibold mt-1">- 7th hour: <b>+P80.00</b></div>
-				<div class="text-sm text-gray-700 font-semibold mt-1">- 8th hour: <b>+P90.00</b></div>
-				<div class="text-sm text-gray-700 font-semibold mt-1">- 9th hour onwards: <b>+100.00 per hour</b></div>
+
+			<div class="flex items-center gap-1 py-3">
+				<div class="whitespace-nowrap font-medium text-gray-900 uppercase text-sm w-1/3">Duration</div>
+				<div class="whitespace-nowrap text-gray-700 w-2/3">
+					<select wire:model.live="duration" class="border border-gray-300 rounded-md px-3 py-1 w-full shadow font-bold">
+						<option value="6000">2 hours (₱60)</option>
+						<option value="10000">3 hours (₱100)</option>
+						<option value="15000">4 hours (₱150)</option>
+						<option value="21000">5 hours (₱210)</option>
+						<option value="28000">6 hours (₱280)</option>
+						<option value="36000">7 hours (₱360)</option>
+						<option value="45000">8 hours (₱450)</option>
+						<option value="55000">9 hours (₱550)</option>
+						<option value="65000">10 hours (₱650)</option>
+						<option value="75000">11 hours (₱750)</option>
+						<option value="85000">12 hours (₱850)</option>
+					</select>
+				</div>
 			</div>
+		</div>
+		<button type="button" class="w-full rounded-lg bg-blue-600 text-white mt-1 text-center py-2 text-xl font-bold">PAY ₱{{ number_format($duration / 100, 2) }}</button>
+		<div class="text-xs text-gray-700 font-normal mt-2 text-center">By clicking pay, you agree to our <a href="#" class="text-blue-600">terms and conditions</a></div>
+		
+		<div class="text-sm text-gray-700 font-semibold mt-4 p-2 bg-gray-200 border border-dashed border-black text-center">This parking slot is owned by <b>{{ $slot->owner->name }}</b>. Rates may be subject to change by the owner.</div>
     </div>
 </div>

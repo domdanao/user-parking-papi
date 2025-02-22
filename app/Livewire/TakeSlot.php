@@ -10,11 +10,19 @@ use Livewire\Attributes\Layout;
 class TakeSlot extends Component
 {
     public Slot $slot;
+    public $duration = 6000; // Default to 2 hours (₱60.00)
 
     public function mount($identifier)
     {
         $this->slot = Slot::with('owner')->where('identifier', $identifier)->firstOrFail();
+        $this->duration = 6000; // Ensure duration is set in mount
     }
+
+	// On update of duration, update the slot's duration
+	public function updatedDuration($value)
+	{
+		$this->duration = $value;
+	}
 
     #[Layout('layouts.minimal')]
     public function render()
