@@ -11,6 +11,7 @@ class TakeSlot extends Component
 {
     public Slot $slot;
     public $duration = 6000; // Default to 2 hours (₱60.00)
+	public $plate_no = '';
 
     public function mount($identifier)
     {
