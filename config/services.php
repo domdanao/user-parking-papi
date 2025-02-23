@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'zip' => [
+		'api_server' => env('ZIP_API_SERVER'),
+        'pk' => env('ZIP_PUBLIC_KEY'),
+		'sk' => env('ZIP_SECRET_KEY'),
+    ],
+
 ];

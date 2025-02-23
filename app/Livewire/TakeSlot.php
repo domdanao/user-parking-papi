@@ -26,14 +26,14 @@ class TakeSlot extends Component
 
     public function isPlateNumberValid()
     {
-        return strlen(trim($this->plate_no)) >= 7;
+        return strlen(trim($this->plate_no)) >= 6 && strlen(trim($this->plate_no)) <= 8;
     }
 
     public function pay()
     {
         // Validate required fields
         $this->validate([
-            'plate_no' => 'required|min:4',
+            'plate_no' => 'required|min:6|max:8',
         ]);
 
         // TODO: Implement payment processing

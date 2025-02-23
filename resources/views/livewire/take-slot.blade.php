@@ -6,7 +6,7 @@
 			</div>
 			<div class="flex flex-col divide-y divide-gray-200 w-full gap-1">
 				<div class="text-sm font-bold text-gray-700 tracking-widest uppercase">Parking Slot #</div>
-				<div class="font-mono font-extrabold text-3xl pt-1">{{ $slot->identifier }}</div>
+				<div class="font-mono font-extrabold text-2xl pt-1">{{ $slot->identifier }}</div>
 			</div>
 		</div>
 
@@ -33,7 +33,7 @@
 				<div class="flex items-center gap-1 py-1">
 					<div class="whitespace-nowrap font-medium text-gray-900 uppercase text-sm w-1/4">Plate #</div>
 					<div class="whitespace-nowrap text-gray-700 w-3/4">
-						<input autofocus type="text" wire:model.live="plate_no" class="border border-gray-300 rounded-md px-3 w-full py-2 shadow placeholder:text-gray-400 font-bold" placeholder="ABC 1234">
+						<input autofocus type="text" maxlength="8" wire:model.live="plate_no" class="border border-gray-300 rounded-md px-3 w-full py-2 shadow placeholder:text-gray-400 font-bold" placeholder="ABC1234">
 						@error('plate_no') 
 							<span class="text-red-600 text-xs font-medium">{{ $message }}</span>
 						@enderror
@@ -68,11 +68,18 @@
 		</div>
 
 		<button type="button" class="w-full rounded-lg bg-blue-600 text-white mt-3 text-center py-2 text-xl font-bold {{ $this->isPlateNumberValid() ? 'shimmer' : '' }}" wire:click="pay">
-			<span>PAY ₱{{ number_format($duration / 100, 2) }}</span>
+			<span>PAY&nbsp;&nbsp;</span><span class="font-mono">₱{{ number_format($duration / 100, 2) }}</span>
 		</button>
 
 		<div class="text-xs text-gray-700 font-normal mt-2 text-center">By clicking pay, you agree to our <a href="#" class="text-blue-600">terms and conditions</a></div>
 		
 		<div class="text-sm text-gray-700 font-semibold mt-8 mb-3 p-2 bg-gray-100 border border-dashed border-black text-center">This parking slot is owned by <b>{{ $slot->owner->name }}</b>. Rates may be subject to change by the owner.</div>
+
+		<div class="flex justify-between items-center gap-2 border-t border-gray-500 border-dotted pt-2 mt-4">
+			<div><img src="{{ asset('/images/parking-papi.jpg') }}" alt="Parking Papi" class="h-6 w-6 rounded-md"></div>
+			<div><span class="text-xs uppercase whitespace-nowrap">Powered by</span>&nbsp;<span class="font-bold text-sm">Parking Papi</span></div>
+			<div><span class="text-xs whitespace-nowrap">Copyright &copy; {{ date('Y') }}</div>
+		</div>
+			
     </div>
 </div>
