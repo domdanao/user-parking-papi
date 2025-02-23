@@ -247,7 +247,7 @@ class ZipService
      * @return array
      * @throws Exception
      */
-    protected function request(string $method, string $endpoint, array $data = [], array $query = []): array
+    public function request(string $method, string $endpoint, array $data = [], array $query = []): array
     {
         $response = Http::withBasicAuth($this->secretKey, '')
             ->withHeaders([
