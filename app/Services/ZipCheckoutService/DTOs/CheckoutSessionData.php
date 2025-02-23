@@ -24,7 +24,8 @@ class CheckoutSessionData
         public readonly ?string $client_reference_id = null,
         public readonly ?BillingAddressCollection $billing_address_collection = null,
         public readonly ?ShippingAddressCollection $shipping_address_collection = null,
-        public readonly ?array $metadata = null
+        public readonly ?array $metadata = null,
+        public readonly array $line_items = []
     ) {}
 
     public static function fromArray(array $data): self
@@ -53,7 +54,11 @@ class CheckoutSessionData
             shipping_address_collection: isset($data['shipping_address_collection'])
                 ? ShippingAddressCollection::fromArray($data['shipping_address_collection'])
                 : null,
-            metadata: $data['metadata'] ?? null
+            metadata: $data['metadata'] ?? null,
+            line_items: array_map(
+                fn(array $item) => LineItem::fromArray($item),
+                $data['line_items'] ?? []
+            )
         );
     }
 
@@ -80,6 +85,7 @@ class CheckoutSessionData
             'billing_address_collection' => $this->billing_address_collection?->toArray(),
             'shipping_address_collection' => $this->shipping_address_collection?->toArray(),
             'metadata' => $this->metadata,
-        ], fn($value) => !is_null($value));
+            'line_items' => array_map(fn(LineItem $item) => $item->toArray(), $this->line_items),
+        ], fn($value) => !is_null($value) && (!is_array($value) || !empty($value)));
     }
 }

@@ -36,6 +36,14 @@ class CheckoutSessionValidator
             'shipping_address_collection.mode' => ['required_with:shipping_address_collection', 'string', Rule::in(['auto', 'required'])],
             'metadata' => ['nullable', 'array'],
             'metadata.*' => ['string'],
+            'line_items' => ['required', 'array', 'min:1'],
+            'line_items.*.name' => ['required', 'string'],
+            'line_items.*.amount' => ['required', 'integer', 'min:1'],
+            'line_items.*.currency' => ['required', 'string', 'size:3'],
+            'line_items.*.quantity' => ['required', 'integer', 'min:1'],
+            'line_items.*.description' => ['nullable', 'string'],
+            'line_items.*.metadata' => ['nullable', 'array'],
+            'line_items.*.metadata.*' => ['string'],
         ]);
 
         if ($validator->fails()) {

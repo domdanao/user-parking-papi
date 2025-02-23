@@ -249,6 +249,8 @@ class ZipService
      */
     public function request(string $method, string $endpoint, array $data = [], array $query = []): array
     {
+		$fullUrl = "{$this->baseUrl}/{$this->version}{$endpoint}";
+
         $response = Http::withBasicAuth($this->secretKey, '')
             ->withHeaders([
                 'Accept' => 'application/json',
@@ -258,7 +260,7 @@ class ZipService
                 'query' => $query,
             ])
             ->{strtolower($method)}(
-                "{$this->baseUrl}/{$this->version}{$endpoint}",
+                $fullUrl,
                 $data
             );
 

@@ -16,10 +16,11 @@ class CheckoutSessionResponse
         public readonly ?string $client_reference_id,
         public readonly string $currency,
         public readonly ?string $customer,
-        public readonly string $status,
-        public readonly string $url,
+        public readonly string $payment_status,
+        public readonly string $payment_url,
         public readonly DateTime $created_at,
-        public readonly ?DateTime $expired_at = null
+        public readonly ?DateTime $expired_at = null,
+        public readonly array $metadata = []
     ) {}
 
     public static function fromArray(array $data): self
@@ -34,10 +35,11 @@ class CheckoutSessionResponse
             client_reference_id: $data['client_reference_id'] ?? null,
             currency: $data['currency'],
             customer: $data['customer'] ?? null,
-            status: $data['status'],
-            url: $data['url'],
+            payment_status: $data['payment_status'],
+            payment_url: $data['payment_url'],
             created_at: new DateTime($data['created_at']),
-            expired_at: isset($data['expired_at']) ? new DateTime($data['expired_at']) : null
+            expired_at: isset($data['expired_at']) ? new DateTime($data['expired_at']) : null,
+            metadata: $data['metadata'] ?? []
         );
     }
 
@@ -53,10 +55,11 @@ class CheckoutSessionResponse
             'client_reference_id' => $this->client_reference_id,
             'currency' => $this->currency,
             'customer' => $this->customer,
-            'status' => $this->status,
-            'url' => $this->url,
+            'payment_status' => $this->payment_status,
+            'payment_url' => $this->payment_url,
             'created_at' => $this->created_at->format(DateTime::ATOM),
             'expired_at' => $this->expired_at?->format(DateTime::ATOM),
+            'metadata' => $this->metadata,
         ], fn($value) => !is_null($value));
     }
 }

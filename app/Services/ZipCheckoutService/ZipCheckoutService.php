@@ -25,6 +25,7 @@ class ZipCheckoutService
         $sessionData = CheckoutSessionData::fromArray($data);
         
         $response = $this->zipService->request('POST', "/sessions", $sessionData->toArray());
+		// dd($response);
         return CheckoutSessionResponse::fromArray($response);
     }
 
