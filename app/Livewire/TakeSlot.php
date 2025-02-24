@@ -30,20 +30,19 @@ class TakeSlot extends Component
         $hourlyRate = $this->slot->getCurrentRate();
         
         // Progressive pricing logic
-        $amount = match($this->hours) {
-            2 => $hourlyRate * 2,
-            3 => ($hourlyRate * 2) + ($hourlyRate + 1000),
-            4 => ($hourlyRate * 2) + ($hourlyRate + 2000),
-            5 => ($hourlyRate * 2) + ($hourlyRate + 3000),
-            6 => ($hourlyRate * 2) + ($hourlyRate + 4000),
-            7 => ($hourlyRate * 2) + ($hourlyRate + 5000),
-            8 => ($hourlyRate * 2) + ($hourlyRate + 6000),
-            9 => ($hourlyRate * 2) + ($hourlyRate + 7000),
-            10 => ($hourlyRate * 2) + ($hourlyRate + 8000),
-            11 => ($hourlyRate * 2) + ($hourlyRate + 9000),
-            12 => ($hourlyRate * 2) + ($hourlyRate + 10000),
-            default => $hourlyRate * $this->hours
-        };
+        if ($this->hours <= 2) {
+            $amount = $hourlyRate * 2;
+        } else {
+            // First 2 hours at base rate
+            $amount = $hourlyRate * 2;
+            
+            // For each additional hour after 2 hours:
+            // Add hourly rate plus an increasing penalty of 1000 * (hour position - 2)
+            for ($hour = 3; $hour <= $this->hours; $hour++) {
+                $penalty = 1000 * ($hour - 2);
+                $amount += ($hourlyRate + $penalty);
+            }
+        }
 
         return (int) $amount;
     }
