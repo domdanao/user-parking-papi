@@ -4,12 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\TakeSlot;
 use App\Http\Controllers\ParkingPaymentController;
 
-// Load parking slot owner routes first
-Route::middleware('web')->group(base_path('routes/parking-slot-owner.php'));
-
-Route::middleware('web')->group(base_path('routes/auth.php'));
-
 Route::middleware('web')->group(function () {
+    // Load auth routes first
+    require base_path('routes/auth.php');
+
+    // Load parking slot owner routes
+    require base_path('routes/parking-slot-owner.php');
+
     Route::view('/', 'welcome');
 
     Route::view('dashboard', 'dashboard')

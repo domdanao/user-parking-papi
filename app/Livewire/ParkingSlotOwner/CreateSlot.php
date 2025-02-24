@@ -21,8 +21,8 @@ class CreateSlot extends Component
         return [
             'name' => ['required', 'string', 'max:255'],
             'identifier' => ['nullable', 'string', 'max:255', 'unique:slots,identifier'],
-            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
-            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
+            'latitude' => ['required', 'numeric', 'between:-90,90'],
+            'longitude' => ['required', 'numeric', 'between:-180,180'],
             'rateCardTemplateId' => ['nullable', 'exists:rate_cards,id'],
         ];
     }
@@ -37,12 +37,10 @@ class CreateSlot extends Component
         $slot->identifier = $this->identifier ?: Str::random(8);
         $slot->status = 'available';
         
-        if ($this->latitude && $this->longitude) {
-            $slot->location = [
-                'latitude' => (float) $this->latitude,
-                'longitude' => (float) $this->longitude,
-            ];
-        }
+        $slot->location = [
+            'latitude' => (float) $this->latitude,
+            'longitude' => (float) $this->longitude,
+        ];
 
         $slot->save();
 

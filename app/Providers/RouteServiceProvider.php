@@ -30,11 +30,50 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $this->routes(function () {
+            // API routes
             Route::middleware('api')
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
 
-            Route::group([], base_path('routes/web.php'));
+            // Web routes
+            Route::middleware('web')
+                ->group(base_path('routes/web.php'));
+
+            // Log all registered routes after registration
+            $this->app->booted(function () {
+                $routes = Route::getRoutes();
+                
+            // Log rate card routes
+                $rateCardRoutes = collect($routes->getRoutes())
+                    ->filter(function ($route) {
+                        return str_contains($route->uri(), 'rate-cards');
+                    })
+                    ->map(function ($route) {
+                        return [
+                            'uri' => $route->uri(),
+                            'name' => $route->getName(),
+                            'methods' => $route->methods(),
+                            'middleware' => $route->middleware(),
+                            'action' => $route->getActionName(),
+                        ];
+                    });
+
+                Log::info('Rate Card Routes:', [
+                    'routes' => $rateCardRoutes->toArray()
+                ]);
+
+                // Log route registration summary
+                Log::info('Route Registration Summary:', [
+                    'total_routes' => count($routes->getRoutes()),
+                    'rate_card_routes' => $rateCardRoutes->count(),
+                    'web_routes' => collect($routes->getRoutes())->filter(function ($route) {
+                        return in_array('web', $route->middleware());
+                    })->count(),
+                    'auth_routes' => collect($routes->getRoutes())->filter(function ($route) {
+                        return str_contains(implode(',', $route->middleware()), 'auth:');
+                    })->count()
+                ]);
+            });
         });
     }
 }

@@ -6,6 +6,8 @@ use App\Services\ZipService;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 use App\Livewire\Pages\ParkingSlotOwner\Auth\Login;
+use App\Livewire\Pages\ParkingSlotOwner\Dashboard;
+use App\Livewire\Pages\ParkingSlotOwner\Auth\Register;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,5 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Livewire::component('pages.parking-slot-owner.auth.login', Login::class);
+        Livewire::component('pages.parking-slot-owner.dashboard', Dashboard::class);
+        Livewire::component('pages.parking-slot-owner.auth.register', Register::class);
     }
 }

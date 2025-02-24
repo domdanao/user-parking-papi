@@ -40,8 +40,16 @@
                                 <x-nav-link :href="route('parking-slot-owner.slots.create')" :active="request()->routeIs('parking-slot-owner.slots.create')">
                                     {{ __('Create Slot') }}
                                 </x-nav-link>
-                                <x-nav-link :href="route('parking-slot-owner.rate-cards.index')" :active="request()->routeIs(['parking-slot-owner.rate-cards.*', 'parking-slot-owner.rate-cards.slots.*'])">
-                                    {{ __('Rate Cards') }}
+                                <x-nav-link 
+                                    :href="route('parking-slot-owner.rate-cards.index')" 
+                                    :active="request()->routeIs([
+                                        'parking-slot-owner.rate-cards.index',
+                                        'parking-slot-owner.rate-cards.create',
+                                        'parking-slot-owner.rate-cards.edit',
+                                        'parking-slot-owner.rate-cards.slots.*'
+                                    ])"
+                                >
+                                    {{ __('Rate Card Templates') }}
                                 </x-nav-link>
                             </div>
                         </div>

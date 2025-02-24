@@ -17,38 +17,35 @@ class TakeSlot extends Component
 
     public function mount($identifier)
     {
-        $this->slot = Slot::with(['owner', 'rateCards'])->where('identifier', $identifier)->firstOrFail();
+        $this->slot = Slot::with(['owner', 'rateCard'])->where('identifier', $identifier)->firstOrFail();
     }
 
     protected function calculateAmount(): int
     {
-        // Get the current rate card from eager loaded relationship
-        $rateCard = $this->slot->rateCards->sortByDesc('created_at')->first();
-        
-        if (!$rateCard) {
-            return 0; // Return 0 if no rate card exists
+        if (!$this->slot->hasActiveRateCard()) {
+            return 0; // Return 0 if no active rate card exists
         }
 
         // Base rate per hour from rate card
-        $hourlyRate = $rateCard->amount;
+        $hourlyRate = $this->slot->getCurrentRate();
         
         // Progressive pricing logic
         $amount = match($this->hours) {
-            2 => $hourlyRate * 2,      // ₱60 (₱30/hr)
-            3 => $hourlyRate * 3.33,   // ₱100 (₱33.33/hr)
-            4 => $hourlyRate * 3.75,   // ₱150 (₱37.50/hr)
-            5 => $hourlyRate * 4.2,    // ₱210 (₱42/hr)
-            6 => $hourlyRate * 4.67,   // ₱280 (₱46.67/hr)
-            7 => $hourlyRate * 5.14,   // ₱360 (₱51.43/hr)
-            8 => $hourlyRate * 5.625,  // ₱450 (₱56.25/hr)
-            9 => $hourlyRate * 6.11,   // ₱550 (₱61.11/hr)
-            10 => $hourlyRate * 6.5,   // ₱650 (₱65/hr)
-            11 => $hourlyRate * 6.82,  // ₱750 (₱68.18/hr)
-            12 => $hourlyRate * 7.08,  // ₱850 (₱70.83/hr)
+            2 => $hourlyRate * 2,
+            3 => ($hourlyRate * 2) + ($hourlyRate + 1000),
+            4 => ($hourlyRate * 2) + ($hourlyRate + 2000),
+            5 => ($hourlyRate * 2) + ($hourlyRate + 3000),
+            6 => ($hourlyRate * 2) + ($hourlyRate + 4000),
+            7 => ($hourlyRate * 2) + ($hourlyRate + 5000),
+            8 => ($hourlyRate * 2) + ($hourlyRate + 6000),
+            9 => ($hourlyRate * 2) + ($hourlyRate + 7000),
+            10 => ($hourlyRate * 2) + ($hourlyRate + 8000),
+            11 => ($hourlyRate * 2) + ($hourlyRate + 9000),
+            12 => ($hourlyRate * 2) + ($hourlyRate + 10000),
             default => $hourlyRate * $this->hours
         };
 
-        return (int) ($amount * 100); // Convert to cents
+        return (int) $amount;
     }
 
     #[Computed]
@@ -85,18 +82,20 @@ class TakeSlot extends Component
             'cancel_url' => url("/parking/cancel"),
             'client_reference_id' => $this->slot->identifier,
             'description' => "Parking at {$this->slot->name} - {$this->plate_no}",
-            'line_items' => [[
-                'name' => "Parking at {$this->slot->name}",
-                'amount' => $amount,
-                'currency' => 'PHP',
-                'quantity' => 1,
-                'description' => "{$this->hours} hours parking for {$this->plate_no}",
-                'metadata' => [
-                    'slot_id' => (string) $this->slot->id,
-                    'plate_no' => (string) $this->plate_no,
-                    'hours' => (string) $this->hours,
-                ]
-            ]],
+            'line_items' => [
+				[
+					'name' => "Parking at {$this->slot->name}",
+					'amount' => $amount,
+					'currency' => 'PHP',
+					'quantity' => 1,
+					'description' => "{$this->hours} hours parking for {$this->plate_no}",
+					'metadata' => [
+						'slot_id' => (string) $this->slot->id,
+						'plate_no' => (string) $this->plate_no,
+						'hours' => (string) $this->hours,
+					]
+				],
+			],
             'metadata' => [
                 'slot_id'  => (string) $this->slot->id,
                 'plate_no' => (string) $this->plate_no,
@@ -113,7 +112,7 @@ class TakeSlot extends Component
                 'amount' => $convenienceFee,
                 'currency' => 'PHP',
                 'quantity' => 1,
-                'description' => 'External payment processing fee'
+                'description' => 'Convenience fee'
             ];
             $payload['amount'] = $amount + $convenienceFee;
         } else {
@@ -136,7 +135,7 @@ class TakeSlot extends Component
         }
 
         $owner = $this->slot->owner;
-        
+
         return view('livewire.take-slot', [
             'slot' => $this->slot,
             'location' => $location,

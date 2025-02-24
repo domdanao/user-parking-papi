@@ -45,12 +45,105 @@ class Slot extends Model
     public function assignRateCardTemplate(RateCard $template): void
     {
         if (!$template->is_template) {
-            throw new \Exception('Can only assign rate card templates');
+            throw new \Exception(__('Can only assign rate card templates'));
+        }
+
+        if (!$template->is_active) {
+            throw new \Exception(__('Cannot assign inactive template'));
+        }
+
+        // If slot already has a rate card, delete it first
+        if ($this->rate_card_id) {
+            $oldRateCard = $this->rateCard;
+            if ($oldRateCard) {
+                $oldRateCard->delete();
+            }
         }
 
         $newRateCard = $template->createFromTemplate();
         $this->rate_card_id = $newRateCard->id;
         $this->save();
+    }
+
+    /**
+     * Check if this slot has a rate card assigned
+     */
+    public function hasRateCard(): bool
+    {
+        return $this->rate_card_id !== null;
+    }
+
+    /**
+     * Check if this slot has an active rate card
+     */
+    public function hasActiveRateCard(): bool
+    {
+        return $this->hasRateCard() && $this->rateCard->is_active;
+    }
+
+    /**
+     * Get the rate card status for this slot
+     */
+    public function getRateCardStatus(): string
+    {
+        if (!$this->hasRateCard()) {
+            return 'none';
+        }
+
+        return $this->rateCard->is_active ? 'active' : 'inactive';
+    }
+
+    /**
+     * Check if this slot needs a rate card update
+     */
+    public function needsRateCardUpdate(): bool
+    {
+        if (!$this->hasRateCard()) {
+            return false;
+        }
+
+        // Slot needs update if rate card is inactive
+        if (!$this->rateCard->is_active) {
+            return true;
+        }
+
+        // Slot needs update if rate card is a template and has been updated
+        if ($this->rateCard->is_template && $this->rateCard->updated_at > $this->updated_at) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the rate card update status message
+     */
+    public function getRateCardUpdateMessage(): ?string
+    {
+        if (!$this->needsRateCardUpdate()) {
+            return null;
+        }
+
+        if (!$this->rateCard->is_active) {
+            return __('Rate card is inactive');
+        }
+
+        if ($this->rateCard->is_template && $this->rateCard->updated_at > $this->updated_at) {
+            return __('Template has been updated');
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the formatted rate for display
+     */
+    public function getFormattedRate(): string
+    {
+        if (!$this->hasRateCard()) {
+            return '-';
+        }
+        return '₱' . number_format($this->rateCard->rate, 2) . ' / ' . $this->rateCard->hour_block . 'hr';
     }
 
     /**

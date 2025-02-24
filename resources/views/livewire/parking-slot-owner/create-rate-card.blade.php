@@ -43,14 +43,37 @@
                     <p class="mt-1 text-sm text-gray-500">{{ __('Amount to charge for this hour block') }}</p>
                 </div>
 
-                <!-- Template Status (only show when creating without a slot) -->
-                @if(!$slot)
-                    <div class="flex items-center">
-                        <input wire:model="is_template" id="is_template" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" checked disabled>
-                        <label for="is_template" class="ml-2 block text-sm text-gray-900">
-                            {{ __('This is a template') }}
-                        </label>
-                        <x-input-error :messages="$errors->get('is_template')" class="mt-2" />
+                <!-- Template Status -->
+                <div class="flex items-center">
+                    <input wire:model="is_template" id="is_template" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" checked disabled>
+                    <label for="is_template" class="ml-2 block text-sm text-gray-900">
+                        @if($is_template)
+                            {{ __('This is a template rate card') }}
+                            <span class="text-gray-500 ml-1">{{ __('(Can be assigned to multiple slots)') }}</span>
+                        @else
+                            {{ __('This is a slot-specific rate card') }}
+                            <span class="text-gray-500 ml-1">{{ __('(Only applies to this slot)') }}</span>
+                        @endif
+                    </label>
+                    <x-input-error :messages="$errors->get('is_template')" class="mt-2" />
+                </div>
+
+                <!-- Template Info -->
+                @if($is_template)
+                    <div class="rounded-md bg-blue-50 p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-blue-800">{{ __('Template Information') }}</h3>
+                                <div class="mt-2 text-sm text-blue-700">
+                                    <p>{{ __('This template can be assigned to multiple slots. Each slot will get its own copy of the rate card with these values.') }}</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 @endif
 
@@ -59,6 +82,13 @@
                     <input wire:model="is_active" id="is_active" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
                     <label for="is_active" class="ml-2 block text-sm text-gray-900">
                         {{ __('Active') }}
+                        <span class="text-gray-500 ml-1">
+                            @if($is_template)
+                                {{ __('(Inactive templates cannot be assigned to slots)') }}
+                            @else
+                                {{ __('(Inactive rate cards will not be used for calculations)') }}
+                            @endif
+                        </span>
                     </label>
                     <x-input-error :messages="$errors->get('is_active')" class="mt-2" />
                 </div>

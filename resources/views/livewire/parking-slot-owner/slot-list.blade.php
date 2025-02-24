@@ -16,6 +16,18 @@
             </div>
         </x-slot>
 
+        <!-- Status Messages -->
+        @if (session('status'))
+            <div class="mb-4 font-medium text-sm text-green-600">
+                {{ session('status') }}
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="mb-4 font-medium text-sm text-red-600">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
             @if ($slots->isEmpty())
                 <div class="p-6 text-center text-gray-500">
@@ -61,20 +73,56 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        @if ($slot->rateCard)
-                                            <span class="text-gray-900">{{ $slot->rateCard->name }}</span><br>
-                                            <span class="text-sm">₱{{ number_format($slot->rateCard->rate, 2) }} / {{ $slot->rateCard->hour_block }}hr</span>
-                                        @else
-                                            <span class="text-red-600">{{ __('No rate card assigned') }}</span>
-                                        @endif
+                                        <div class="flex flex-col gap-1">
+                                            @if ($slot->hasRateCard())
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-gray-900">{{ $slot->rateCard->name }}</span>
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                                        @switch($slot->getRateCardStatus())
+                                                            @case('active')
+                                                                bg-green-100 text-green-800
+                                                                @break
+                                                            @case('inactive')
+                                                                bg-red-100 text-red-800
+                                                                @break
+                                                            @default
+                                                                bg-gray-100 text-gray-800
+                                                        @endswitch">
+                                                        {{ ucfirst($slot->getRateCardStatus()) }}
+                                                    </span>
+                                                </div>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-sm font-medium">{{ $slot->getFormattedRate() }}</span>
+                                                    @if($slot->needsRateCardUpdate())
+                                                        <a href="{{ route('parking-slot-owner.rate-cards.slots.index', $slot) }}" wire:navigate 
+                                                            class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full hover:bg-yellow-200">
+                                                            {{ __('Update Rate Card') }}
+                                                        </a>
+                                                    @endif
+                                                </div>
+                                            @else
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-red-600">{{ __('No rate card assigned') }}</span>
+                                                    <a href="{{ route('parking-slot-owner.rate-cards.slots.index', $slot) }}" wire:navigate 
+                                                        class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full hover:bg-indigo-200">
+                                                        {{ __('Assign') }}
+                                                    </a>
+                                                </div>
+                                            @endif
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ $slot->created_at->format('M d, Y') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <a href="{{ route('parking-slot-owner.rate-cards.slots.index', $slot) }}" wire:navigate class="text-indigo-600 hover:text-indigo-900">
-                                            {{ __('Manage Rates') }}
-                                        </a>
+                                        <div class="flex gap-4">
+                                            <a href="{{ route('parking-slot-owner.slots.edit', $slot) }}" wire:navigate class="text-indigo-600 hover:text-indigo-900">
+                                                {{ __('Edit') }}
+                                            </a>
+                                            <a href="{{ route('parking-slot-owner.rate-cards.slots.index', $slot) }}" wire:navigate class="text-indigo-600 hover:text-indigo-900">
+                                                {{ __('Manage Rates') }}
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
@@ -84,4 +132,5 @@
             @endif
         </div>
     </div>
+
 </div>

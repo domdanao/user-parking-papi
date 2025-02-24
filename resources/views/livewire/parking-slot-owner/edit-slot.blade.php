@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
         <x-slot name="header">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Create New Parking Slot') }}
+                {{ __('Edit Parking Slot') }}
             </h2>
         </x-slot>
 
@@ -18,8 +18,8 @@
 
                     <!-- Identifier -->
                     <div>
-                        <x-input-label for="identifier" :value="__('Identifier (Optional)')" />
-                        <x-text-input wire:model="identifier" id="identifier" class="block mt-1 w-full" type="text" placeholder="Leave empty to auto-generate" />
+                        <x-input-label for="identifier" :value="__('Identifier')" />
+                        <x-text-input wire:model="identifier" id="identifier" class="block mt-1 w-full" type="text" required />
                         <x-input-error :messages="$errors->get('identifier')" class="mt-2" />
                     </div>
 
@@ -50,9 +50,13 @@
                         <x-input-error :messages="$errors->get('rateCardTemplateId')" class="mt-2" />
                     </div>
 
-                    <div class="flex items-center justify-end mt-4">
-                        <x-primary-button class="ml-4">
-                            {{ __('Create Slot') }}
+                    <div class="flex items-center justify-between mt-4">
+                        <x-danger-button type="button" wire:click="confirmDeletion">
+                            {{ __('Delete Slot') }}
+                        </x-danger-button>
+
+                        <x-primary-button>
+                            {{ __('Update Slot') }}
                         </x-primary-button>
                     </div>
                 </div>
