@@ -34,33 +34,4 @@
             </div>
         </form>
     </div>
-
-    <?php
-
-    use function Livewire\Volt\{state};
-
-    state([
-        'email' => '',
-        'password' => '',
-        'remember' => false,
-    ]);
-
-    $login = function () {
-        $this->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
-
-        if (Auth::guard('parking-slot-owner')->attempt([
-            'email' => $this->email,
-            'password' => $this->password,
-        ], $this->remember)) {
-            session()->regenerate();
-
-            return redirect()->intended(route('parking-slot-owner.dashboard'));
-        }
-
-        $this->addError('email', trans('auth.failed'));
-    };
-    ?>
 </x-guest-layout>

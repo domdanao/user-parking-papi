@@ -40,6 +40,9 @@
                                 <x-nav-link :href="route('parking-slot-owner.slots.create')" :active="request()->routeIs('parking-slot-owner.slots.create')">
                                     {{ __('Create Slot') }}
                                 </x-nav-link>
+                                <x-nav-link :href="route('parking-slot-owner.rate-cards.index')" :active="request()->routeIs(['parking-slot-owner.rate-cards.*', 'parking-slot-owner.rate-cards.slots.*'])">
+                                    {{ __('Rate Cards') }}
+                                </x-nav-link>
                             </div>
                         </div>
 

@@ -28,6 +28,12 @@
 			</iframe>
 		</div>
 		
+		@if(!$slot->rateCards->count())
+			<div class="mt-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700">
+				<p class="font-medium">This parking slot is currently unavailable</p>
+				<p class="text-sm">No rate card has been set up for this parking slot. Please contact the owner.</p>
+			</div>
+		@else
 		<div class="text-xl mt-4 flex flex-col gap-1">
 			<div class="flex flex-col gap-1 py-2">
 				<div class="flex items-center gap-1 py-1">
@@ -50,29 +56,25 @@
 			<div class="flex items-center gap-1 py-2">
 				<div class="whitespace-nowrap font-medium text-gray-900 uppercase text-sm w-1/4">Duration</div>
 				<div class="whitespace-nowrap text-gray-700 w-3/4">
-					<select wire:model.live="duration" class="border border-gray-300 rounded-md px-3 py-2 w-full shadow font-bold">
-						<option value="6000">2 hours (₱60)</option>
-						<option value="10000">3 hours (₱100)</option>
-						<option value="15000">4 hours (₱150)</option>
-						<option value="21000">5 hours (₱210)</option>
-						<option value="28000">6 hours (₱280)</option>
-						<option value="36000">7 hours (₱360)</option>
-						<option value="45000">8 hours (₱450)</option>
-						<option value="55000">9 hours (₱550)</option>
-						<option value="65000">10 hours (₱650)</option>
-						<option value="75000">11 hours (₱750)</option>
-						<option value="85000">12 hours (₱850)</option>
+					<select wire:model.live="hours" class="border border-gray-300 rounded-md px-3 py-2 w-full shadow font-bold">
+						@foreach([2,3,4,5,6,7,8,9,10,11,12] as $hour)
+							<option value="{{ $hour }}">
+								{{ $hour }} hours (₱{{ number_format($this->calculateAmount() / 100, 2) }})
+							</option>
+						@endforeach
 					</select>
 				</div>
 			</div>
 		</div>
 
-		<button type="button" class="w-full rounded-lg bg-blue-600 text-white mt-3 text-center py-2 text-xl font-bold {{ $this->isPlateNumberValid() ? 'shimmer' : '' }}" wire:click="pay">
-			<span>PAY&nbsp;&nbsp;</span><span class="font-mono">₱{{ number_format($duration / 100, 2) }}</span>
+		<button type="button" class="w-full rounded-lg bg-blue-600 text-white mt-3 text-center py-2 text-xl font-bold {{ $this->isPlateNumberValid() ? 'shimmer' : '' }}" wire:click="pay" {{ !$slot->rateCards->count() ? 'disabled' : '' }}>
+			<span>PAY&nbsp;&nbsp;</span><span class="font-mono">₱{{ number_format($this->amount() / 100, 2) }}</span>
 		</button>
 
 		<div class="text-xs text-gray-700 font-normal mt-2 text-center">By clicking pay, you agree to our <a href="#" class="text-blue-600">terms and conditions</a></div>
 		
+		@endif
+
 		<div class="text-sm text-gray-700 font-semibold mt-8 mb-3 p-2 bg-gray-100 border border-dashed border-black text-center">This parking slot is owned by <b>{{ $slot->owner->name }}</b>. Rates may be subject to change by the owner.</div>
 
 		<div class="flex justify-between items-center gap-2 border-t border-gray-500 border-dotted pt-2 mt-4">

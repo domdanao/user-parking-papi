@@ -32,11 +32,41 @@ class Slot extends Model
     }
 
     /**
-     * Get the rate cards for this slot.
+     * Get the rate card for this slot.
      */
-    public function rateCards(): HasMany
+    public function rateCard(): BelongsTo
     {
-        return $this->hasMany(RateCard::class);
+        return $this->belongsTo(RateCard::class);
+    }
+
+    /**
+     * Assign a rate card template to this slot
+     */
+    public function assignRateCardTemplate(RateCard $template): void
+    {
+        if (!$template->is_template) {
+            throw new \Exception('Can only assign rate card templates');
+        }
+
+        $newRateCard = $template->createFromTemplate();
+        $this->rate_card_id = $newRateCard->id;
+        $this->save();
+    }
+
+    /**
+     * Get the current rate for this slot
+     */
+    public function getCurrentRate(): int
+    {
+        return $this->rateCard?->rate ?? 0;
+    }
+
+    /**
+     * Calculate parking fee for a duration
+     */
+    public function calculateParkingFee(float $duration): int
+    {
+        return $this->rateCard?->calculateTotalRate($duration) ?? 0;
     }
 
     /**

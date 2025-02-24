@@ -1,17 +1,18 @@
 <?php
 
-use App\Livewire\Pages\ParkingSlotOwner\Auth\Login;
-use App\Livewire\Pages\ParkingSlotOwner\Auth\Register;
+use Illuminate\Support\Facades\Route;
+use App\Livewire\ParkingSlotOwner\Auth\Login;
 use App\Livewire\ParkingSlotOwner\Auth\Logout;
 use App\Livewire\ParkingSlotOwner\CreateSlot;
 use App\Livewire\ParkingSlotOwner\Dashboard;
 use App\Livewire\ParkingSlotOwner\SlotList;
-use Illuminate\Support\Facades\Route;
+use App\Livewire\ParkingSlotOwner\RateCardList;
+use App\Livewire\ParkingSlotOwner\CreateRateCard;
+use App\Livewire\ParkingSlotOwner\EditRateCard;
 
 Route::prefix('owner')->name('parking-slot-owner.')->group(function () {
     // Guest routes
-    Route::middleware('guest:parking-slot-owner')->group(function () {
-        Route::get('register', Register::class)->name('register');
+    Route::middleware('guest.parking-slot-owner')->group(function () {
         Route::get('login', Login::class)->name('login');
     });
 
@@ -24,9 +25,22 @@ Route::prefix('owner')->name('parking-slot-owner.')->group(function () {
         Route::get('slots', SlotList::class)->name('slots.index');
         Route::get('slots/create', CreateSlot::class)->name('slots.create');
         
-        // Rate Cards routes will be added here
-        // Route::get('slots/{slot}/rate-cards', RateCardList::class)->name('rate-cards.index');
-        // Route::get('slots/{slot}/rate-cards/create', CreateRateCard::class)->name('rate-cards.create');
-        // Route::get('rate-cards/{rateCard}/edit', EditRateCard::class)->name('rate-cards.edit');
+        // Rate Cards routes
+        Route::prefix('rate-cards')->name('rate-cards.')->group(function () {
+            // Root route must come first
+            Route::get('/', RateCardList::class)->name('index');
+            
+            // Create route
+            Route::get('/create', CreateRateCard::class)->name('create');
+            
+            // Slot-specific routes
+            Route::prefix('slots')->name('slots.')->group(function () {
+                Route::get('/{slot}', RateCardList::class)->name('index')->where('slot', '[0-9]+');
+                Route::get('/{slot}/create', CreateRateCard::class)->name('create')->where('slot', '[0-9]+');
+            });
+            
+            // Edit route must come last to avoid conflicts
+            Route::get('/{rateCard}/edit', EditRateCard::class)->name('edit')->where('rateCard', '[0-9]+');
+        });
     });
 });

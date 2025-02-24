@@ -4,24 +4,28 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\TakeSlot;
 use App\Http\Controllers\ParkingPaymentController;
 
-Route::view('/', 'welcome');
+// Load parking slot owner routes first
+Route::middleware('web')->group(base_path('routes/parking-slot-owner.php'));
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::middleware('web')->group(base_path('routes/auth.php'));
 
-Route::view('profile', 'profile')
-    ->middleware(['auth'])
-    ->name('profile');
+Route::middleware('web')->group(function () {
+    Route::view('/', 'welcome');
 
-Route::view('/scan', 'scan');
-Route::view('/generate', 'generate');
+    Route::view('dashboard', 'dashboard')
+        ->middleware(['auth', 'verified'])
+        ->name('dashboard');
 
-Route::get('/slot/{identifier}', TakeSlot::class)->name('take-slot');
+    Route::view('profile', 'profile')
+        ->middleware(['auth'])
+        ->name('profile');
 
-// Payment routes
-Route::get('/parking/success', [ParkingPaymentController::class, 'success'])->name('parking.success');
-Route::get('/parking/cancel', [ParkingPaymentController::class, 'cancel'])->name('parking.cancel');
+    Route::view('/scan', 'scan');
+    Route::view('/generate', 'generate');
 
-require __DIR__.'/auth.php';
-require __DIR__.'/parking-slot-owner.php';
+    Route::get('/slot/{identifier}', TakeSlot::class)->name('take-slot');
+
+    // Payment routes
+    Route::get('/parking/success', [ParkingPaymentController::class, 'success'])->name('parking.success');
+    Route::get('/parking/cancel', [ParkingPaymentController::class, 'cancel'])->name('parking.cancel');
+});

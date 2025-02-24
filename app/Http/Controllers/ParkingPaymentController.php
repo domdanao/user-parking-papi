@@ -15,13 +15,13 @@ class ParkingPaymentController extends Controller
         // Create parking session from metadata
         $parkingSession = ParkingSession::create([
             'slot_id' => $session->metadata['slot_id'],
-            'plate_no' => $session->metadata['plate_no'],
-            'duration' => $session->metadata['duration'],
-            'amount_paid' => $session->amount_total,
-            'payment_id' => $session->id,
-            'payment_status' => $session->status,
-            'starts_at' => now(),
-            'ends_at' => now()->addSeconds($session->metadata['duration'] / 100), // Convert cents to seconds
+            'plate_number' => $session->metadata['plate_no'],
+            'start_time' => now(),
+            'end_time' => now()->addHours($session->metadata['hours']),
+            'status' => 'active',
+            'total_amount' => $session->amount_total,
+            'duration_hours' => $session->metadata['hours'],
+            'convenience_fee' => config('parking.convenience_fee', 1500)
         ]);
 
         return view('parking.success', [

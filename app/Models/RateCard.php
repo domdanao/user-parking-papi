@@ -4,23 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class RateCard extends Model
 {
     protected $fillable = [
         'parking_slot_owner_id',
-        'slot_id',
         'name',
         'description',
         'hour_block',
         'rate',
         'is_active',
+        'is_template',
     ];
 
     protected $casts = [
         'hour_block' => 'integer',
         'rate' => 'integer',
         'is_active' => 'boolean',
+        'is_template' => 'boolean',
     ];
 
     /**
@@ -32,47 +34,68 @@ class RateCard extends Model
     }
 
     /**
-     * Get the slot this rate card belongs to.
+     * Get the slots using this rate card.
      */
-    public function slot(): BelongsTo
+    public function slots(): HasMany
     {
-        return $this->belongsTo(Slot::class);
+        return $this->hasMany(Slot::class);
     }
 
     /**
-     * Get the rate for a specific hour block in a specific slot
+     * Scope a query to only include templates.
      */
-    public static function getRateForHour(int $hour, int $slotId): int
+    public function scopeTemplates($query)
     {
-        $rate = static::where('slot_id', $slotId)
-            ->where('hour_block', $hour)
-            ->where('is_active', true)
-            ->first();
-        
-        // If no specific rate found for this hour, use the highest hour block rate for this slot
-        if (!$rate) {
-            $rate = static::where('slot_id', $slotId)
-                ->where('is_active', true)
-                ->orderByDesc('hour_block')
-                ->first();
+        return $query->where('is_template', true);
+    }
+
+    /**
+     * Scope a query to only include non-templates.
+     */
+    public function scopeNonTemplates($query)
+    {
+        return $query->where('is_template', false);
+    }
+
+    /**
+     * Create a new rate card from this template
+     */
+    public function createFromTemplate(): self
+    {
+        if (!$this->is_template) {
+            throw new \Exception('Can only create new rate cards from templates');
         }
 
-        return $rate ? $rate->rate : 0;
+        $newRateCard = self::create([
+            'parking_slot_owner_id' => $this->parking_slot_owner_id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'hour_block' => $this->hour_block,
+            'rate' => $this->rate,
+            'is_active' => true,
+            'is_template' => false,
+        ]);
+
+        return $newRateCard;
     }
 
     /**
-     * Calculate the total rate for a given duration in hours for a specific slot
+     * Get the rate for a specific hour block
      */
-    public static function calculateTotalRate(float $duration, int $slotId): int
+    public function getRateForHour(int $hour): int
     {
-        $totalRate = 0;
+        if ($hour === $this->hour_block) {
+            return $this->rate;
+        }
+        return 0;
+    }
+
+    /**
+     * Calculate the total rate for a given duration in hours
+     */
+    public function calculateTotalRate(float $duration): int
+    {
         $fullHours = ceil($duration);
-
-        // Calculate rate for each hour
-        for ($hour = 1; $hour <= $fullHours; $hour++) {
-            $totalRate += static::getRateForHour($hour, $slotId);
-        }
-
-        return $totalRate;
+        return $this->rate * $fullHours;
     }
 }

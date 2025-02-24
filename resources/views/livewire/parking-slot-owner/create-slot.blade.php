@@ -38,6 +38,18 @@
                         </div>
                     </div>
 
+                    <!-- Rate Card Template -->
+                    <div>
+                        <x-input-label for="rateCardTemplateId" :value="__('Rate Card Template (Optional)')" />
+                        <select wire:model="rateCardTemplateId" id="rateCardTemplateId" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                            <option value="">Select a rate card template</option>
+                            @foreach($rateCardTemplates as $template)
+                                <option value="{{ $template->id }}">{{ $template->name }} ({{ money($template->rate) }}/{{ $template->hour_block }}hr)</option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('rateCardTemplateId')" class="mt-2" />
+                    </div>
+
                     <div class="flex items-center justify-end mt-4">
                         <x-primary-button class="ml-4">
                             {{ __('Create Slot') }}
