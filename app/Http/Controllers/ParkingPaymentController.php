@@ -10,7 +10,13 @@ class ParkingPaymentController extends Controller
 {
     public function success(Request $request, ZipCheckoutService $checkoutService)
     {
+		// Get session from ZipCheckout
         $session = $checkoutService->getSession($request->query('session_id'));
+
+		// Check if session is paid
+		if (!$session->payment_status === 'paid') {
+            return redirect()->route('parking.cancel');
+        }
 
         // Create parking session from metadata
         $parkingSession = ParkingSession::create([

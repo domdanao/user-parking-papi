@@ -2,14 +2,9 @@
     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
         <x-slot name="header">
             <div class="flex justify-between items-center">
-                <div>
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                        {{ __('My Parking Slots') }}
-                    </h2>
-                    <a href="{{ route('parking-slot-owner.rate-cards.index') }}" wire:navigate class="text-sm text-indigo-600 hover:text-indigo-900">
-                        {{ __('Manage Rate Card Templates') }}
-                    </a>
-                </div>
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    {{ __('My Parking Slots') }}
+                </h2>
                 <a href="{{ route('parking-slot-owner.slots.create') }}" wire:navigate class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
                     {{ __('Create New Slot') }}
                 </a>
@@ -93,20 +88,10 @@
                                                 </div>
                                                 <div class="flex items-center gap-2">
                                                     <span class="text-sm font-medium">{{ $slot->getFormattedRate() }}</span>
-                                                    @if($slot->needsRateCardUpdate())
-                                                        <a href="{{ route('parking-slot-owner.rate-cards.slots.index', $slot) }}" wire:navigate 
-                                                            class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full hover:bg-yellow-200">
-                                                            {{ __('Update Rate Card') }}
-                                                        </a>
-                                                    @endif
                                                 </div>
                                             @else
                                                 <div class="flex items-center gap-2">
                                                     <span class="text-red-600">{{ __('No rate card assigned') }}</span>
-                                                    <a href="{{ route('parking-slot-owner.rate-cards.slots.index', $slot) }}" wire:navigate 
-                                                        class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full hover:bg-indigo-200">
-                                                        {{ __('Assign') }}
-                                                    </a>
                                                 </div>
                                             @endif
                                         </div>
@@ -118,9 +103,6 @@
                                         <div class="flex gap-4">
                                             <a href="{{ route('parking-slot-owner.slots.edit', $slot) }}" wire:navigate class="text-indigo-600 hover:text-indigo-900">
                                                 {{ __('Edit') }}
-                                            </a>
-                                            <a href="{{ route('parking-slot-owner.rate-cards.slots.index', $slot) }}" wire:navigate class="text-indigo-600 hover:text-indigo-900">
-                                                {{ __('Manage Rates') }}
                                             </a>
                                         </div>
                                     </td>

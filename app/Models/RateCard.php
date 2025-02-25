@@ -63,7 +63,7 @@ class RateCard extends Model
      */
     public function getFormattedRate(): string
     {
-        return '₱' . number_format($this->rate, 2) . ' / ' . $this->hour_block . 'hr';
+        return '₱' . number_format($this->rate / 100, 2) . ' / ' . $this->hour_block . 'hr';
     }
 
     /**

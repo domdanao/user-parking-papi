@@ -143,7 +143,7 @@ class Slot extends Model
         if (!$this->hasRateCard()) {
             return '-';
         }
-        return '₱' . number_format($this->rateCard->rate, 2) . ' / ' . $this->rateCard->hour_block . 'hr';
+        return '₱' . number_format($this->rateCard->rate / 100, 2) . ' / ' . $this->rateCard->hour_block . 'hr';
     }
 
     /**

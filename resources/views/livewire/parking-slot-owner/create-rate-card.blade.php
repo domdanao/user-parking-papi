@@ -37,10 +37,10 @@
 
                 <!-- Rate -->
                 <div>
-                    <x-input-label for="rate" :value="__('Rate Amount (₱)')" />
+                    <x-input-label for="rate" :value="__('Rate Amount (in centavos)')" />
                     <x-text-input wire:model="rate" id="rate" class="block mt-1 w-full" type="number" min="1" required />
                     <x-input-error :messages="$errors->get('rate')" class="mt-2" />
-                    <p class="mt-1 text-sm text-gray-500">{{ __('Amount to charge for this hour block') }}</p>
+                    <p class="mt-1 text-sm text-gray-500">{{ __('Amount in centavos (e.g. enter 5000 for ₱50.00)') }}</p>
                 </div>
 
                 <!-- Template Status -->
