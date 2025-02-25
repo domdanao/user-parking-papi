@@ -75,7 +75,7 @@
 
 		<button type="button" class="flex justify-between w-full rounded-lg bg-blue-600 text-white mt-3 py-2 text-xl font-bold {{ $this->isPlateNumberValid() ? 'shimmer' : '' }}" wire:click="pay" wire:loading.attr="disabled" {{ !$slot->hasActiveRateCard() || !$this->isPlateNumberValid() ? 'disabled' : '' }}>
 			<div></div>
-			<div><span wire:target="pay">PAY&nbsp;&nbsp;</span><span class="font-mono">₱{{ number_format($this->amount() / 100, 2) }}</span></div>
+			<div><span wire:target="pay">PAY&nbsp;</span>₱<span class="font-mono">₱{{ number_format($this->amount() / 100, 2) }}</span></div>
 			<div>
 				<span wire:loading wire:target="pay">
 					<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

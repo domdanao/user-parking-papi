@@ -29,4 +29,7 @@ Route::middleware('web')->group(function () {
     // Payment routes
     Route::get('/parking/success', [ParkingPaymentController::class, 'success'])->name('parking.success');
     Route::get('/parking/cancel', [ParkingPaymentController::class, 'cancel'])->name('parking.cancel');
+
+	// Google Map
+	Route::view('/map', 'map')->name('map');
 });
